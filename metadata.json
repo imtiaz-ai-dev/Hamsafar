@@ -1,0 +1,8 @@
+
+{
+  "name": "Hamsafar Cab Service",
+  "description": "A seamless ride-booking application where customers can book cabs, select seats, and instantly notify driver groups via WhatsApp.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
