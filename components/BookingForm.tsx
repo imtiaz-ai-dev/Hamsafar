@@ -40,6 +40,10 @@ const BookingForm: React.FC<BookingFormProps> = ({ user, lang, onBookingComplete
   const [currentBooking, setCurrentBooking] = useState<Booking | null>(null);
   const [showUrgentSlots, setShowUrgentSlots] = useState(false);
   const [serviceStatus, setServiceStatus] = useState<'checking' | 'available' | 'unavailable'>('checking');
+<<<<<<< HEAD
+=======
+  const [locations, setLocations] = useState<string[]>([]);
+>>>>>>> aa631a9 (updated website)
 
   useEffect(() => {
     const checkAvailability = () => {
@@ -50,6 +54,17 @@ const BookingForm: React.FC<BookingFormProps> = ({ user, lang, onBookingComplete
     const interval = setInterval(checkAvailability, 60000);
     return () => clearInterval(interval);
   }, []);
+<<<<<<< HEAD
+=======
+
+  useEffect(() => {
+    const saved = localStorage.getItem('hamsafar_locations');
+    if (saved) {
+      const locs = JSON.parse(saved);
+      setLocations(locs.map((l: any) => l.name));
+    }
+  }, []);
+>>>>>>> aa631a9 (updated website)
 
   // Generate urgent time slots (within 48 hours)
   const getUrgentTimeSlots = () => {
@@ -245,25 +260,51 @@ const BookingForm: React.FC<BookingFormProps> = ({ user, lang, onBookingComplete
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <div>
             <label className="text-sm font-semibold text-slate-600 ml-1 mb-1.5 block">Pickup Location</label>
-            <input
-              ref={pickupRef}
-              type="text"
-              placeholder="Search location..."
-              value={booking.pickup}
-              onChange={(e) => setBooking({...booking, pickup: e.target.value})}
-              className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-700"
-            />
+            {locations.length > 0 ? (
+              <select
+                value={booking.pickup}
+                onChange={(e) => setBooking({...booking, pickup: e.target.value})}
+                className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-700"
+              >
+                <option value="">Select pickup location...</option>
+                {locations.map((loc, i) => (
+                  <option key={i} value={loc}>{loc}</option>
+                ))}
+              </select>
+            ) : (
+              <input
+                ref={pickupRef}
+                type="text"
+                placeholder="Search location..."
+                value={booking.pickup}
+                onChange={(e) => setBooking({...booking, pickup: e.target.value})}
+                className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-700"
+              />
+            )}
           </div>
           <div>
             <label className="text-sm font-semibold text-slate-600 ml-1 mb-1.5 block">Destination</label>
-            <input
-              ref={destRef}
-              type="text"
-              placeholder="Search location..."
-              value={booking.destination}
-              onChange={(e) => setBooking({...booking, destination: e.target.value})}
-              className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-700"
-            />
+            {locations.length > 0 ? (
+              <select
+                value={booking.destination}
+                onChange={(e) => setBooking({...booking, destination: e.target.value})}
+                className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-700"
+              >
+                <option value="">Select destination...</option>
+                {locations.map((loc, i) => (
+                  <option key={i} value={loc}>{loc}</option>
+                ))}
+              </select>
+            ) : (
+              <input
+                ref={destRef}
+                type="text"
+                placeholder="Search location..."
+                value={booking.destination}
+                onChange={(e) => setBooking({...booking, destination: e.target.value})}
+                className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-700"
+              />
+            )}
           </div>
         </div>
 

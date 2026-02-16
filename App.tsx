@@ -5,11 +5,12 @@ import BookingForm from './components/BookingForm';
 import AdminPanel from './components/AdminPanel';
 import RouteManager from './components/RouteManager';
 import MyBookings from './components/MyBookings';
+import LocationManager from './components/LocationManager';
 import { Car, MapPin, History, LogOut, ShieldCheck, LayoutDashboard, Globe } from 'lucide-react';
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [view, setView] = useState<'booking' | 'history' | 'routes'>('booking');
+  const [view, setView] = useState<'booking' | 'history' | 'routes' | 'locations'>('booking');
   const [lang, setLang] = useState<'en' | 'ur'>('en');
 
   const t = {
@@ -84,6 +85,9 @@ const App: React.FC = () => {
             </div>
           </div>
           <div className="max-w-7xl mx-auto flex gap-2 mt-4">
+            <button onClick={() => setView('locations')} className={`px-4 py-2 rounded-xl text-sm font-medium ${view === 'locations' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}`}>
+              Locations
+            </button>
             <button onClick={() => setView('routes')} className={`px-4 py-2 rounded-xl text-sm font-medium ${view === 'routes' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}`}>
               {t[lang].routes}
             </button>
@@ -93,7 +97,7 @@ const App: React.FC = () => {
           </div>
         </header>
         <main className="flex-1 p-4 sm:p-6 lg:p-8">
-          {view === 'routes' ? <RouteManager /> : <AdminPanel />}
+          {view === 'locations' ? <LocationManager /> : view === 'routes' ? <RouteManager /> : <AdminPanel />}
         </main>
       </div>
     );
