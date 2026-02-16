@@ -39,32 +39,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ user, lang, onBookingComplete
   const [showReceipt, setShowReceipt] = useState(false);
   const [currentBooking, setCurrentBooking] = useState<Booking | null>(null);
   const [showUrgentSlots, setShowUrgentSlots] = useState(false);
-  const [serviceStatus, setServiceStatus] = useState<'checking' | 'available' | 'unavailable'>('checking');
-<<<<<<< HEAD
-=======
-  const [locations, setLocations] = useState<string[]>([]);
->>>>>>> aa631a9 (updated website)
-
-  useEffect(() => {
-    const checkAvailability = () => {
-      const hour = new Date().getHours();
-      setServiceStatus(hour >= 6 && hour < 23 ? 'available' : 'unavailable');
-    };
-    checkAvailability();
-    const interval = setInterval(checkAvailability, 60000);
-    return () => clearInterval(interval);
-  }, []);
-<<<<<<< HEAD
-=======
-
-  useEffect(() => {
-    const saved = localStorage.getItem('hamsafar_locations');
-    if (saved) {
-      const locs = JSON.parse(saved);
-      setLocations(locs.map((l: any) => l.name));
-    }
-  }, []);
->>>>>>> aa631a9 (updated website)
 
   // Generate urgent time slots (within 48 hours)
   const getUrgentTimeSlots = () => {

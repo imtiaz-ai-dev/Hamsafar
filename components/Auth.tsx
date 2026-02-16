@@ -68,7 +68,7 @@ const Auth: React.FC<AuthProps> = ({ onLogin }) => {
         </form>
 
         <div className="mt-6 pt-4 border-t border-slate-100 text-center">
-          <p className="text-xs text-slate-400">Admin: phone 03001234567, name "admin"</p>
+          <p className="text-xs text-slate-400"></p>
         </div>
       </div>
     </div>
