@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Input from './Input';
 import Button from './Button';
 import Receipt from './Receipt';
@@ -14,8 +14,6 @@ interface BookingFormProps {
 }
 
 const BookingForm: React.FC<BookingFormProps> = ({ user, lang, onBookingComplete }) => {
-  const pickupRef = useRef<HTMLInputElement>(null);
-  const destRef = useRef<HTMLInputElement>(null);
   
   const getMinDate = () => {
     const date = new Date();
@@ -39,6 +37,8 @@ const BookingForm: React.FC<BookingFormProps> = ({ user, lang, onBookingComplete
   const [showReceipt, setShowReceipt] = useState(false);
   const [currentBooking, setCurrentBooking] = useState<Booking | null>(null);
   const [showUrgentSlots, setShowUrgentSlots] = useState(false);
+  const [serviceStatus, setServiceStatus] = useState<'checking' | 'available' | 'unavailable'>('checking');
+  const [locations, setLocations] = useState<string[]>([]);
 
   // Generate urgent time slots (within 48 hours)
   const getUrgentTimeSlots = () => {
@@ -57,32 +57,20 @@ const BookingForm: React.FC<BookingFormProps> = ({ user, lang, onBookingComplete
   };
 
   useEffect(() => {
-    // Google Maps Autocomplete (optional)
-    if (typeof window !== 'undefined' && window.google && window.google.maps && window.google.maps.places) {
-      try {
-        const pickupAutocomplete = new google.maps.places.Autocomplete(pickupRef.current!, {
-          componentRestrictions: { country: 'pk' }
-        });
-        const destAutocomplete = new google.maps.places.Autocomplete(destRef.current!, {
-          componentRestrictions: { country: 'pk' }
-        });
-        
-        pickupAutocomplete.addListener('place_changed', () => {
-          const place = pickupAutocomplete.getPlace();
-          if (place.formatted_address) {
-            setBooking(prev => ({ ...prev, pickup: place.formatted_address! }));
-          }
-        });
-        
-        destAutocomplete.addListener('place_changed', () => {
-          const place = destAutocomplete.getPlace();
-          if (place.formatted_address) {
-            setBooking(prev => ({ ...prev, destination: place.formatted_address! }));
-          }
-        });
-      } catch (error) {
-        console.log('Google Maps not loaded, using regular input');
-      }
+    const checkAvailability = () => {
+      const hour = new Date().getHours();
+      setServiceStatus(hour >= 6 && hour < 23 ? 'available' : 'unavailable');
+    };
+    checkAvailability();
+    const interval = setInterval(checkAvailability, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('hamsafar_locations');
+    if (saved) {
+      const locs = JSON.parse(saved);
+      setLocations(locs.map((l: any) => l.name));
     }
   }, []);
 
@@ -247,7 +235,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ user, lang, onBookingComplete
               </select>
             ) : (
               <input
-                ref={pickupRef}
                 type="text"
                 placeholder="Search location..."
                 value={booking.pickup}
@@ -271,7 +258,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ user, lang, onBookingComplete
               </select>
             ) : (
               <input
-                ref={destRef}
                 type="text"
                 placeholder="Search location..."
                 value={booking.destination}

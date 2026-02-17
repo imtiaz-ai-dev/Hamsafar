@@ -23,7 +23,7 @@ const Auth: React.FC<AuthProps> = ({ onLogin }) => {
     }
     
     // Check if admin login
-    const isAdmin = formData.phone === '03001234567' && formData.name.toLowerCase() === 'admin';
+    const isAdmin = formData.name.toLowerCase() === 'admin';
     
     const user: User = {
       id: Math.random().toString(36).substr(2, 9),
